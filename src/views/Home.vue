@@ -1,18 +1,36 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div class="attendance-wrapper">
+      <AttendanceForm @submit="onAttendanceSubmit" />
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import AttendanceForm from "@/components/AttendanceForm.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "Home",
   components: {
-    HelloWorld
+    AttendanceForm
+  },
+  methods: {
+    onAttendanceSubmit(data) {
+      this.addAttendance(data);
+      this.$router.push({ name: "Logs" });
+    },
+    ...mapActions({
+      addAttendance: "Attendance/addAttendance"
+    })
   }
 };
 </script>
+
+<style>
+.attendance-wrapper {
+  justify-content: center;
+  display: flex;
+}
+</style>
