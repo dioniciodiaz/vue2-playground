@@ -31,15 +31,15 @@ const actions = {
     commit("ADD_ATTENDANCE", payload);
   },
   updateAttendance({ commit }, payload) {
-    commit("ADD_ATTENDANCE", payload);
+    commit("UPDATE_ATTENDANCE", payload);
   }
 };
 
 const getters = {
-  activeAttendance() {
-    return state.asistance.filter(item => item.active);
+  activeAttendance(state) {
+    return state.asistance.filter(item => !!item.active);
   },
-  inactiveAttendance() {
+  inactiveAttendance(state) {
     return state.asistance.filter(item => !item.active);
   }
 };
