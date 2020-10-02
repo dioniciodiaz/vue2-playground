@@ -1,18 +1,14 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" class="validation-observer">
     <form @submit.prevent="onSubmit">
-      <ValidationProvider
-        name="Name"
-        rules="required|alpha"
-        v-slot="{ errors }"
-      >
+      <ValidationProvider name="Name" rules="required" v-slot="{ errors }">
         <div class="form-group">
-          <label for="exampleInputEmail1">Name</label>
+          <label for="name">Name</label>
           <input
             v-model="name"
             type="text"
             class="form-control"
-            id="exampleInputEmail1"
+            id="name"
             aria-describedby="emailHelp"
           />
           <span>{{ errors[0] }}</span>
@@ -20,16 +16,18 @@
       </ValidationProvider>
       <ValidationProvider name="time" rules="required" v-slot="{ errors }">
         <div class="form-group">
-          <label for="exampleInputPassword1">Date</label>
+          <label for="time">Time</label>
           <input
             v-model="date"
-            type="date"
+            type="text"
             class="form-control"
-            id="exampleInputPassword1"
+            id="time"
+            disabled
           />
           <span>{{ errors[0] }}</span>
         </div>
       </ValidationProvider>
+
       <button type="submit" :disabled="invalid" class="btn btn-primary">
         Submit
       </button>
@@ -41,6 +39,7 @@
 import { ValidationObserver } from "vee-validate";
 import { ValidationProvider } from "vee-validate/dist/vee-validate.full.esm";
 import dayjs from "dayjs";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   components: {
@@ -49,22 +48,22 @@ export default {
   },
   data: () => ({
     name: "",
-    date: ""
+    date: dayjs().format("h:mm:ss A")
   }),
   methods: {
     onSubmit() {
       const atendanceObject = {
-        date: this.date,
-        in: dayjs().format("h:mm:ss A"),
-        out: "",
-        id: 1,
+        id: uuidv4(),
         name: this.name,
         breaks: [
           { in: "", out: "" },
           { in: "", out: "" }
         ],
+        lunch: { in: "", out: "" },
+        presence: { in: dayjs().format("DD-M-YYYY h:mm:ss A"), out: "" },
         active: true
       };
+
       this.$emit("submit", atendanceObject);
     }
   }
