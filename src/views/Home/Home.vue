@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home container">
     <div class="attendance-wrapper">
       <AttendanceForm @submit="onAttendanceSubmit" />
     </div>
@@ -7,14 +7,15 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import AttendanceForm from "@/components/AttendanceForm.vue";
 import { mapActions } from "vuex";
 
 export default {
   name: "Home",
   components: {
-    AttendanceForm
+    AttendanceForm: () =>
+      import(
+        /* webpackChunkName: "AttendanceForm" */ "@v/Home/AttendanceForm.vue"
+      )
   },
   methods: {
     onAttendanceSubmit(data) {
