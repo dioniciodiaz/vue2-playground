@@ -1,7 +1,11 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" class="validation-observer">
     <form @submit.prevent="onSubmit">
-      <ValidationProvider name="Name" rules="required" v-slot="{ errors }">
+      <ValidationProvider
+        name="Name"
+        rules="required"
+        v-slot="{ errors, valid }"
+      >
         <div class="form-group">
           <label for="name">Name</label>
           <input
@@ -9,7 +13,8 @@
             type="text"
             class="form-control"
             id="name"
-            aria-describedby="emailHelp"
+            aria-describedby="name"
+            v-on:keyup.enter="() => valid && onSubmit()"
           />
           <span>{{ errors[0] }}</span>
         </div>
@@ -55,10 +60,7 @@ export default {
       const atendanceObject = {
         id: uuidv4(),
         name: this.name,
-        breaks: [
-          { in: "", out: "" },
-          { in: "", out: "" }
-        ],
+        breaks: [],
         lunch: { in: "", out: "" },
         presence: { in: dayjs().format("DD-M-YYYY h:mm:ss A"), out: "" },
         active: true
