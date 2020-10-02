@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 const getTimeLapse = time => {
   const dateIn = dayjs(time.in);
   const dateOut = dayjs(time.out);
-  return dateOut.diff(dateIn, "s");
+  return dateOut.diff(dateIn, "m");
 };
 
 const getBreaksFormated = (breaks, name, type) => {
