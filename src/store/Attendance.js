@@ -1,14 +1,20 @@
-// const atendance = {
-//   in: "date",
-//   out: "date",
-//   id: 1,
-//   name: "dionicio",
-//   breaks: [
-//     { in: "date", out: "date" },
-//     { in: "date", out: "date" }
-//   ],
-//   active: "boolean"
-// };
+import dayjs from "dayjs";
+
+const getTimeLapse = time => {
+  const dateIn = dayjs(time.in);
+  const dateOut = dayjs(time.out);
+  return dateOut.diff(dateIn, "s");
+};
+
+const getBreaksFormated = (breaks, name, type) => {
+  const atendance = breaks.map(rest => {
+    const timelapse = getTimeLapse(rest);
+    const breakHistoryTemplate = { ...rest, name, type, timelapse };
+
+    return breakHistoryTemplate;
+  });
+  return atendance;
+};
 
 const state = {
   asistance: []
@@ -41,6 +47,22 @@ const getters = {
   },
   inactiveAttendance(state) {
     return state.asistance.filter(item => !item.active);
+  },
+  historyAttendance(state, getters) {
+    const atendance = getters.inactiveAttendance
+      .map(attendance => {
+        const { precense, breaks, lunch, name } = attendance;
+        const historyTemplate = { ...precense, name, type: "In/out" };
+        const breaksFormated = getBreaksFormated(breaks, name, "Break");
+        let lunchFormated = [];
+        if (lunch.in !== "") {
+          lunchFormated = getBreaksFormated([lunch], name, "Lunch");
+        }
+        return [historyTemplate, ...breaksFormated, ...lunchFormated];
+      })
+      .flat();
+
+    return atendance;
   }
 };
 
