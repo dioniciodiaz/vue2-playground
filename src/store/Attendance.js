@@ -51,8 +51,8 @@ const getters = {
   historyAttendance(state, getters) {
     const atendance = getters.inactiveAttendance
       .map(attendance => {
-        const { precense, breaks, lunch, name } = attendance;
-        const historyTemplate = { ...precense, name, type: "In/out" };
+        const { presence, breaks, lunch, name } = attendance;
+        const historyTemplate = { ...presence, name, type: "In/out" };
         const breaksFormated = getBreaksFormated(breaks, name, "Break");
         let lunchFormated = [];
         if (lunch.in !== "") {
