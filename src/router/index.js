@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "@v/Home.vue";
+import Home from "@v/Home/Home.vue";
 
 Vue.use(VueRouter);
 
@@ -13,7 +13,7 @@ const routes = [
   {
     path: "/logs",
     name: "Logs",
-    component: () => import(/* webpackChunkName: "about" */ "@v/Logs.vue")
+    component: () => import(/* webpackChunkName: "logs" */ "@v/Logs/List.vue")
   },
   {
     path: "/history",
