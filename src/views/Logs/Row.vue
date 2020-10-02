@@ -4,18 +4,24 @@
     <th>{{ attendance.presence.in }}</th>
     <th>
       <Breaks
-        id="attendance.id"
         :breaks="attendance.breaks"
-        @onBreakChanges="breaks => updateBreaks(breaks, attendance)"
+        @update-breaks="breaks => updateBreaks(breaks, attendance)"
+        :disabled="!canTakeABreak"
+      />
+    </th>
+    <th>
+      <Lunch
+        :lunch="attendance.lunch"
+        @update-lunch="lunch => updateLunch(lunch, attendance)"
         :disabled="!canTakeLunch"
       />
     </th>
-    <th></th>
     <th>
       <button
         @click="signingOff(attendance)"
         type="button"
-        class="btn btn-secondary btn-sm"
+        class="btn btn-info btn-sm"
+        :disabled="!canSigningOff"
       >
         Signing Off
       </button>
@@ -28,7 +34,8 @@ import dayjs from "dayjs";
 
 export default {
   components: {
-    Breaks: () => import(/* webpackChunkName: "Breaks" */ "@v/Logs/Breaks.vue")
+    Breaks: () => import(/* webpackChunkName: "Breaks" */ "@v/Logs/Breaks.vue"),
+    Lunch: () => import(/* webpackChunkName: "Lunch" */ "@v/Logs/Lunch.vue")
   },
   props: {
     attendance: {
@@ -68,10 +75,10 @@ export default {
 
       this.saveAttendance(attendanceCopy);
     },
-    updateLunch(breaks = [], attendance = {}) {
+    updateLunch(lunch = {}, attendance = {}) {
       const attendanceCopy = {
         ...attendance,
-        breaks
+        lunch
       };
 
       this.saveAttendance(attendanceCopy);
@@ -79,16 +86,26 @@ export default {
   },
   computed: {
     canSigningOff() {
-      return true;
+      return this.canTakeABreak === this.canTakeLunch;
     },
     canTakeABreak() {
-      return true;
+      return (
+        this.attendance.lunch.in === "" || this.attendance.lunch.out !== ""
+      );
     },
     canTakeLunch() {
-      return true;
+      return !this.shouldCloseBreak;
+    },
+    shouldCloseBreak() {
+      let result = false;
+      const copyOfBreaks = [...this.attendance.breaks];
+      if (copyOfBreaks.length) {
+        const currentIndex = copyOfBreaks.length - 1;
+        const lastBreak = copyOfBreaks[currentIndex];
+        result = lastBreak.out === "";
+      }
+      return result;
     }
   }
 };
 </script>
-
-<style></style>
