@@ -9,3 +9,12 @@ export const formatHistoryAttendances = attendances => {
     return { ...item, hours, date };
   });
 };
+
+export const canCreateANewAttendance = (attendance, name) => {
+  let result = true;
+  if (name.length === "") {
+    return result;
+  }
+  result = !attendance.some(item => item.name == name);
+  return result;
+};

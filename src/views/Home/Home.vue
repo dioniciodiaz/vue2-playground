@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
+import { mapActions, mapGetters } from "vuex";
+import { canCreateANewAttendance } from "@/utils";
 export default {
   name: "Home",
   components: {
@@ -19,11 +19,24 @@ export default {
   },
   methods: {
     onAttendanceSubmit(data) {
-      this.addAttendance(data);
-      this.$router.push({ name: "Logs" });
+      const canCreateAttendance = canCreateANewAttendance(
+        this.activeAttendance,
+        data.name
+      );
+      if (canCreateAttendance) {
+        this.addAttendance(data);
+        this.$router.push({ name: "Logs" });
+      } else {
+        alert("no puede hacer ponches nuevos sino se cierra la pasada");
+      }
     },
     ...mapActions({
       addAttendance: "Attendance/addAttendance"
+    })
+  },
+  computed: {
+    ...mapGetters({
+      activeAttendance: "Attendance/activeAttendance"
     })
   }
 };
